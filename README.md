@@ -99,3 +99,29 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 # brain-agriculture-backend
 # brain-agriculture-backend
 # brain-agriculture-backend
+
+## Rodando com Docker
+
+```bash
+docker-compose up --build
+```
+
+A aplicação estará disponível em http://localhost:3000  
+O banco de dados estará disponível em localhost:5432
+
+## Documentação da API
+
+Acesse a documentação interativa (Swagger) em:  
+http://localhost:3000/api/docs
+
+## Rodando as migrations do Prisma
+
+Se necessário, execute as migrations manualmente:
+
+```bash
+yarn prisma migrate deploy
+```
+
+## Exemplos de requisição
+
+Veja exemplos completos de payloads e respostas na documentação Swagger.

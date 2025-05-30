@@ -7,6 +7,8 @@ export class UpdateRuralProducerDto {
 
   @IsOptional()
   @IsString()
-  @Length(11, 14, { message: 'O documento deve ter entre 11 (CPF) e 14 (CNPJ) caracteres.' })
+  @Length(11, 14, {
+    message: 'O documento deve ter entre 11 (CPF) e 14 (CNPJ) caracteres.',
+  })
   document?: string;
-} 
+}

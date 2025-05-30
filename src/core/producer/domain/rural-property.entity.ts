@@ -16,7 +16,9 @@ export class RuralProperty {
 
   private validateAreas() {
     if (this.arableArea + this.vegetationArea > this.totalArea) {
-      throw new Error('A soma das áreas agricultáveis e de vegetação não pode exceder a área total.');
+      throw new Error(
+        'A soma das áreas agricultáveis e de vegetação não pode exceder a área total.',
+      );
     }
   }
-} 
+}

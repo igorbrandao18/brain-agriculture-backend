@@ -14,6 +14,8 @@ describe('RuralProducer Entity', () => {
   });
 
   it('should throw error for invalid document', () => {
-    expect(() => new RuralProducer('3', 'Inválido', '123')).toThrow('Documento inválido: deve ser um CPF ou CNPJ válido.');
+    expect(() => new RuralProducer('3', 'Inválido', '123')).toThrow(
+      'Documento inválido: deve ser um CPF ou CNPJ válido.',
+    );
   });
-}); 
+});

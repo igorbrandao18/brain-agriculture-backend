@@ -12,4 +12,4 @@ export const PRISMA_CLIENT = 'PRISMA_CLIENT';
   ],
   exports: [PRISMA_CLIENT],
 })
-export class DatabaseModule {} 
+export class DatabaseModule {}

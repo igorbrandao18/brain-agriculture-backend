@@ -6,4 +6,4 @@ export interface IRuralProducerRepository {
   update(producer: RuralProducer): Promise<void>;
   delete(id: string): Promise<void>;
   findAll(): Promise<RuralProducer[]>;
-} 
+}

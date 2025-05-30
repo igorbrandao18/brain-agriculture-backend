@@ -5,7 +5,7 @@ import { CreateRuralProducerUseCase } from '../../core/producer/use-cases/create
 import { UpdateRuralProducerUseCase } from '../../core/producer/use-cases/update-rural-producer.usecase';
 import { DeleteRuralProducerUseCase } from '../../core/producer/use-cases/delete-rural-producer.usecase';
 import { DashboardUseCase } from '../../core/producer/use-cases/dashboard.usecase';
-import { DatabaseModule, PRISMA_CLIENT } from '../../infrastructure/database/database.module';
+import { DatabaseModule } from '../../infrastructure/database/database.module';
 
 @Module({
   imports: [DatabaseModule],
@@ -18,22 +18,26 @@ import { DatabaseModule, PRISMA_CLIENT } from '../../infrastructure/database/dat
     DashboardUseCase,
     {
       provide: CreateRuralProducerUseCase,
-      useFactory: (repo: PrismaRuralProducerRepository) => new CreateRuralProducerUseCase(repo),
+      useFactory: (repo: PrismaRuralProducerRepository) =>
+        new CreateRuralProducerUseCase(repo),
       inject: [PrismaRuralProducerRepository],
     },
     {
       provide: UpdateRuralProducerUseCase,
-      useFactory: (repo: PrismaRuralProducerRepository) => new UpdateRuralProducerUseCase(repo),
+      useFactory: (repo: PrismaRuralProducerRepository) =>
+        new UpdateRuralProducerUseCase(repo),
       inject: [PrismaRuralProducerRepository],
     },
     {
       provide: DeleteRuralProducerUseCase,
-      useFactory: (repo: PrismaRuralProducerRepository) => new DeleteRuralProducerUseCase(repo),
+      useFactory: (repo: PrismaRuralProducerRepository) =>
+        new DeleteRuralProducerUseCase(repo),
       inject: [PrismaRuralProducerRepository],
     },
     {
       provide: DashboardUseCase,
-      useFactory: (repo: PrismaRuralProducerRepository) => new DashboardUseCase(repo),
+      useFactory: (repo: PrismaRuralProducerRepository) =>
+        new DashboardUseCase(repo),
       inject: [PrismaRuralProducerRepository],
     },
   ],

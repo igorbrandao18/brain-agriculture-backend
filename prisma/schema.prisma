@@ -13,7 +13,7 @@ datasource db {
 model RuralProducer {
   id           String           @id @default(uuid())
   name         String
-  document     String           // CPF ou CNPJ
+  document     String           @unique // CPF ou CNPJ
   properties   RuralProperty[]
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @updatedAt
@@ -23,7 +23,7 @@ model RuralProperty {
   id                String         @id @default(uuid())
   name              String
   state             String
-  city              String
+  city              String?
   totalArea         Float
   arableArea        Float
   vegetationArea    Float
