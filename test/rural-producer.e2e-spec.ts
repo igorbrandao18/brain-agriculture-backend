@@ -174,13 +174,14 @@ describe('RuralProducerController (e2e)', () => {
       .post('/producers')
       .send({ name: 'João', document: '12345678901' })
       .expect(201);
-    const id: string = (createRes.body as ProducerResponseDto).id;
+    const { id: producerId = '' } = createRes.body as { id?: string };
+    expect(typeof producerId).toBe('string');
     // Busca por id
     const res = await request(app.getHttpServer())
-      .get(`/producers/${id}`)
+      .get(`/producers/${producerId}`)
       .expect(200);
     const body = res.body as unknown as ProducerResponseDto;
-    expect(body).toHaveProperty('id', id);
+    expect(body).toHaveProperty('id', producerId);
     expect(body.name).toBe('João');
     expect(body.document).toBe('12345678901');
   });
@@ -200,14 +201,15 @@ describe('RuralProducerController (e2e)', () => {
       .post('/producers')
       .send({ name: 'João', document: '12345678901' })
       .expect(201);
-    const id: string = (createRes.body as ProducerResponseDto).id;
+    const { id: producerId = '' } = createRes.body as { id?: string };
+    expect(typeof producerId).toBe('string');
     // Atualiza
     const updateRes = await request(app.getHttpServer())
-      .put(`/producers/${id}`)
+      .put(`/producers/${producerId}`)
       .send({ name: 'João Atualizado', document: '12345678901' })
       .expect(200);
     const updateBody = updateRes.body as ProducerResponseDto;
-    expect(updateBody).toHaveProperty('id', id);
+    expect(updateBody).toHaveProperty('id', producerId);
     expect(updateBody.name).toBe('João Atualizado');
   });
 
@@ -227,16 +229,19 @@ describe('RuralProducerController (e2e)', () => {
       .post('/producers')
       .send({ name: 'João', document: '12345678901' })
       .expect(201);
-    const id: string = (createRes.body as ProducerResponseDto).id;
+    const { id: producerId = '' } = createRes.body as { id?: string };
+    expect(typeof producerId).toBe('string');
     // Remove
     const deleteRes = await request(app.getHttpServer())
-      .delete(`/producers/${id}`)
+      .delete(`/producers/${producerId}`)
       .expect(200);
     expect((deleteRes.body as { message: string }).message).toContain(
       'removido com sucesso',
     );
     // Confirma que não existe mais
-    await request(app.getHttpServer()).get(`/producers/${id}`).expect(404);
+    await request(app.getHttpServer())
+      .get(`/producers/${producerId}`)
+      .expect(404);
   });
 
   it('/producers/:id (DELETE) - should return 404 for non-existent id', async () => {
@@ -299,5 +304,59 @@ describe('RuralProducerController (e2e)', () => {
     expect(Array.isArray(dashboard.byState)).toBe(true);
     expect(Array.isArray(dashboard.byCrop)).toBe(true);
     expect(Array.isArray(dashboard.landUse)).toBe(true);
+  });
+
+  it('should cascade delete all related entities when deleting a producer', async () => {
+    // Cria produtor com fazenda, safra e cultura
+    const producerPayload = {
+      name: 'Produtor Cascata',
+      document: '11122233344',
+      farms: [
+        {
+          name: 'Fazenda Cascata',
+          state: 'SP',
+          totalArea: 200,
+          arableArea: 120,
+          vegetationArea: 80,
+          crops: ['Soja', 'Milho'],
+        },
+      ],
+    };
+    const createRes = await request(app.getHttpServer())
+      .post('/producers')
+      .send(producerPayload)
+      .expect(201);
+    const { id: producerId = '' } = createRes.body as { id?: string };
+    expect(typeof producerId).toBe('string');
+    // Busca propriedades do produtor
+    const property = await prisma.ruralProperty.findFirst({
+      where: { producerId },
+    });
+    const propertyId = property?.id ?? '';
+    expect(typeof propertyId).toBe('string');
+    // Busca safra da propriedade
+    const harvest = await prisma.harvest.findFirst({ where: { propertyId } });
+    const harvestId = harvest?.id ?? '';
+    expect(typeof harvestId).toBe('string');
+    // Busca cultura da safra
+    const crop = await prisma.plantedCrop.findFirst({ where: { harvestId } });
+    expect(crop).toBeTruthy();
+    // Deleta o produtor
+    await request(app.getHttpServer())
+      .delete(`/producers/${producerId}`)
+      .expect(200);
+    // Confirma que tudo foi removido
+    const propertyAfter = await prisma.ruralProperty.findFirst({
+      where: { producerId },
+    });
+    expect(propertyAfter).toBeNull();
+    const harvestAfter = await prisma.harvest.findFirst({
+      where: { propertyId },
+    });
+    expect(harvestAfter).toBeNull();
+    const cropAfter = await prisma.plantedCrop.findFirst({
+      where: { harvestId },
+    });
+    expect(cropAfter).toBeNull();
   });
 });

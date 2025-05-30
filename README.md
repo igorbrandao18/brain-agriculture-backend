@@ -4,7 +4,7 @@
   <img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" />
 </p>
 
-<p align="center">
+    <p align="center">
   <b>Backend for Brain Agriculture Technical Challenge</b><br/>
   <i>REST API with NestJS, Prisma, PostgreSQL, Docker, Clean Architecture</i>
 </p>
