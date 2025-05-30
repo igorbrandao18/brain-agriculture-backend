@@ -1,0 +1,55 @@
+// Prisma schema for Brain Agriculture
+// Banco: PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model RuralProducer {
+  id           String           @id @default(uuid())
+  name         String
+  document     String           // CPF ou CNPJ
+  properties   RuralProperty[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+model RuralProperty {
+  id                String         @id @default(uuid())
+  name              String
+  state             String
+  city              String
+  totalArea         Float
+  arableArea        Float
+  vegetationArea    Float
+  producerId        String
+  producer          RuralProducer  @relation(fields: [producerId], references: [id])
+  harvests          Harvest[]
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+}
+
+model Harvest {
+  id            String         @id @default(uuid())
+  year          Int
+  propertyId    String
+  property      RuralProperty  @relation(fields: [propertyId], references: [id])
+  plantedCrops  PlantedCrop[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model PlantedCrop {
+  id         String   @id @default(uuid())
+  name       String
+  area       Float
+  harvestId  String
+  harvest    Harvest  @relation(fields: [harvestId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
