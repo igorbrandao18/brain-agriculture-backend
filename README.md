@@ -180,3 +180,10 @@ See full examples in Swagger docs. Example payload for creating a producer:
 ## License
 
 MIT
+
+---
+
+## Autor
+
+Desenvolvido por **Igor Brandão**  
+[LinkedIn](https://www.linkedin.com/in/igorbrandaodeveloper/)
