@@ -177,13 +177,21 @@ See full examples in Swagger docs. Example payload for creating a producer:
 
 ---
 
-## License
-
-MIT
-
----
-
 ## Autor
 
 Desenvolvido por **Igor Brandão**  
 [LinkedIn](https://www.linkedin.com/in/igorbrandaodeveloper/)
+
+---
+
+## Considerações Finais
+
+Este projeto poderia ser expandido com diversas features avançadas, como:
+- Integração com Keycloak para autenticação e autorização robusta
+- Monitoramento com Prometheus/Grafana
+- Deploy automatizado (CI/CD)
+- Testes de performance
+- Integração com APIs externas para validação de CNPJ
+- Multi-tenant, cache distribuído, filas, etc.
+
+No entanto, o foco foi entregar todas as demandas do teste da vaga com excelência, qualidade de código, testes e documentação.
