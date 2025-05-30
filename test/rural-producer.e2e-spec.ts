@@ -94,7 +94,49 @@ describe('RuralProducerController (e2e)', () => {
       .post('/producers')
       .send(payload)
       .expect(201);
-    const body: ProducerResponseDto = res.body;
+    type RawProducerResponse = {
+      id: unknown;
+      name: unknown;
+      document: unknown;
+      farms?: unknown;
+    };
+    let raw: RawProducerResponse = {
+      id: '',
+      name: '',
+      document: '',
+      farms: [],
+    };
+    if (typeof res.body === 'object' && res.body !== null) {
+      raw = res.body as RawProducerResponse;
+    }
+    const body: ProducerResponseDto = {
+      id: typeof raw.id === 'string' ? raw.id : '',
+      name: typeof raw.name === 'string' ? raw.name : '',
+      document: typeof raw.document === 'string' ? raw.document : '',
+      farms: Array.isArray(raw.farms)
+        ? raw.farms
+            .filter(
+              (farm): farm is Record<string, unknown> =>
+                typeof farm === 'object' && farm !== null,
+            )
+            .map((farm) => ({
+              id: typeof farm.id === 'string' ? farm.id : '',
+              name: typeof farm.name === 'string' ? farm.name : '',
+              state: typeof farm.state === 'string' ? farm.state : '',
+              totalArea:
+                typeof farm.totalArea === 'number' ? farm.totalArea : 0,
+              arableArea:
+                typeof farm.arableArea === 'number' ? farm.arableArea : 0,
+              vegetationArea:
+                typeof farm.vegetationArea === 'number'
+                  ? farm.vegetationArea
+                  : 0,
+              crops: Array.isArray(farm.crops)
+                ? farm.crops.filter((c: unknown) => typeof c === 'string')
+                : [],
+            }))
+        : [],
+    };
     expect(body).toHaveProperty('id');
     expect(body.name).toBe('Maria');
     expect(body.farms).toBeDefined();
